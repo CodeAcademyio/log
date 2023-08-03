@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Academy - Login</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css'>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="logo.png" type="image/svg+xml">
+</head>
+<body>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form action="#">
+			<h1>Create Account</h1>
+			<span>use your email for registration</span>
+			<input type="text" placeholder="Name" id="signupName" />
+			<input type="email" placeholder="Email" id="signupEmail" />
+			<input type="password" placeholder="Password" id="signupPassword" />
+			<button type="button" id="signUpButton">Sign Up</button>
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form action="#">
+			<h1>Sign in</h1>
+			<span>use your account</span>
+			<input type="email" placeholder="Email" id="loginEmail" />
+			<input type="password" placeholder="Password" id="loginPassword" />
+			<button type="button" id="signInButton">Sign In</button>
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Welcome Back!</h1>
+				<p>To keep connected with us please login with your personal info</p>
+				<button class="ghost" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Hi, Coder!</h1>
+				<p>Enter your credentials to start your coding journey</p>
+				<button class="ghost" id="signUp">Sign Up</button>
+			</div>
+		</div>
+	</div>
+</div>
+<footer>
+	<p>
+		Created with <i class="fa fa-heart"></i> by
+		<a target="_blank" href="https://samirsengupta.github.io/SamirSengupta/">Samir Sengupta</a>
+	</p>
+</footer>
+<!-- partial -->
+<script type="module">
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDZdFHxg7di_leImooLhVlbVW7UqvgiMCs",
+    authDomain: "code-academy-20.firebaseapp.com",
+    projectId: "code-academy-20",
+    storageBucket: "code-academy-20.appspot.com",
+    messagingSenderId: "986808335819",
+    appId: "1:986808335819:web:fbbd51b1e250f77da14a4e",
+    measurementId: "G-K5BTE84KZN"
+  };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const signUpButton = document.getElementById('signUp');
+  const signInButton = document.getElementById('signIn');
+  const container = document.getElementById('container');
+
+  signUpButton.addEventListener('click', () => {
+    container.classList.add("right-panel-active");
+  });
+
+  signInButton.addEventListener('click', () => {
+    container.classList.remove("right-panel-active");
+  });
+
+  document.getElementById('signUpButton').addEventListener('click', showSignUpMessage);
+
+  function showSignUpMessage() {
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const messageDiv = document.createElement('div');
+        messageDiv.id = 'message';
+        document.body.appendChild(messageDiv);
+        messageDiv.innerHTML = `Account created for ${user.email}`;
+        setTimeout(() => {
+          messageDiv.innerHTML = '';
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  document.getElementById('signInButton').addEventListener('click', showLoginMessage);
+
+  function showLoginMessage() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        const messageDiv = document.createElement('div');
+        messageDiv.id = 'message';
+        document.body.appendChild(messageDiv);
+        messageDiv.innerHTML = `Logged in as ${user.email}`;
+        setTimeout(() => {
+          messageDiv.innerHTML = '';
+          window.location.href = 'https://codeacademyio.github.io/edu/intern.html';
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+</script>
+</body>
+</html>
